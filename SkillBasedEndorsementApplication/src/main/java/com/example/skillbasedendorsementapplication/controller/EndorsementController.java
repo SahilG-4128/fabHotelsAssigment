@@ -28,7 +28,8 @@ public class EndorsementController {
     public EndorsementResponseDTO postEndorsement(@Valid @RequestBody EndorsementRequestDTO request) {
         try{
             log.info("call made for posting endorsement successfully");
-            //cehcking if revieweeId and ReviewerId are same if same returning from here only
+
+            //checking if revieweeId and ReviewerId are same if same returning from here only
             if(Objects.equals(request.getRevieweeId(), request.getReviewerId())){
                 EndorsementResponseDTO endorsementResponseDTO=new EndorsementResponseDTO();
                 endorsementResponseDTO.setRevieweeId(null);

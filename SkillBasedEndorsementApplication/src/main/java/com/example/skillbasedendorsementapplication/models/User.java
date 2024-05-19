@@ -5,6 +5,7 @@ import org.springframework.data.neo4j.core.schema.GeneratedValue;
 import org.springframework.data.neo4j.core.schema.Id;
 import org.springframework.data.neo4j.core.schema.Node;
 import org.springframework.data.neo4j.core.schema.Relationship;
+import org.springframework.stereotype.Indexed;
 
 import java.util.List;
 
@@ -14,7 +15,9 @@ public class User {
     @Id
     @GeneratedValue
     private long id;
+
     private String name;
+
     private int yearsOfExperience;
 
     @Relationship(type = "HAS_SKILL", direction = Relationship.Direction.OUTGOING)

@@ -6,6 +6,7 @@ import org.springframework.data.neo4j.core.schema.GeneratedValue;
 import org.springframework.data.neo4j.core.schema.Id;
 import org.springframework.data.neo4j.core.schema.Node;
 import org.springframework.data.neo4j.core.schema.Relationship;
+import org.springframework.stereotype.Indexed;
 
 @Node("Endorsement")
 @Data
@@ -14,6 +15,7 @@ public class Endorsement {
     @Id
     @GeneratedValue()
     private long id;
+
     @NotNull
     private int score;
     private double adjustedScore;
