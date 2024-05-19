@@ -38,6 +38,10 @@ public class EndorsementServiceImpl implements EndrosementService {
     @Override
     public EndorsementResponseDTO postEndorsement(EndorsementRequestDTO request) {
         try {
+            /*
+                checking if we have a  reviewee,reviewer and skill for which
+                we will be calculating the real score
+             */
             User reviewee = userRepository.findById(request.getRevieweeId())
                     .orElseThrow(() -> new CustomException("Endrosee not found"));
             log.info("reviewee id checked successfully");
@@ -49,9 +53,15 @@ public class EndorsementServiceImpl implements EndrosementService {
                     .orElseThrow(() -> new CustomException("Skill not found"));
             log.info("skill id checked successfully");
             log.info("all checks for endroser,endrosee and skills done.");
+
+
             StringBuilder reason=new StringBuilder();
+
+            //fuction for calculating the adjusted score based upon various factors
             double adjustedScore = calculateAdjustedScore(reviewee, reviewer, skill, request.getScore(),reason);
             log.info("adjusted score calculated successfully");
+
+            //creating final object and returning it after saving in DB
             Endorsement endorsement = new Endorsement();
             endorsement.setEndorsee(reviewee);
             endorsement.setEndorser(reviewer);
@@ -60,7 +70,7 @@ public class EndorsementServiceImpl implements EndrosementService {
             endorsement.setAdjustedScore(adjustedScore);
             endorsement.setReason(reason.toString());
 
-            Endorsement response=endrosementRepository.save(endorsement);
+            endrosementRepository.save(endorsement);
             log.info("data saved after calculating the adjusted score");
             return new EndorsementResponseDTO(endorsement);
         }
@@ -72,11 +82,13 @@ public class EndorsementServiceImpl implements EndrosementService {
     @Override
     public Map<String, List<String>>  getEndorsements(Long userId) {
         try{
+            //checking whether we have any endorsements for the mentioned userID
             List<Endorsement> endorsements = endrosementRepository.findByEndorseeId(userId);
             log.info("endorsements fetched successfully from database");
             if(endorsements.isEmpty()){
                 log.warn("no endorsements found for the userid:"+userId);
             }
+            //mapping all the verdicts to teh corresponding skill
             Map<String, List<String>> endorsementsBySkill = endorsements.stream()
                     .map(EndorsementResponseDTO::new)
                     .collect(Collectors.groupingBy(
@@ -95,6 +107,13 @@ public class EndorsementServiceImpl implements EndrosementService {
         }
     }
 
+
+    /*
+        Here is the logic for calculating the adjusted score on the factors like:-
+        reviewer has skills mentioned
+        reviewee has the skill
+        years of experience
+     */
     private double calculateAdjustedScore(User reviewee, User reviewer, Skill skill, int score,StringBuilder reason) {
         log.info("Calculating adjusted score of the reviwee id:"+reviewee.getId()+" by the reviewer id:"+reviewer.getId());
         double weight = 1.0;
