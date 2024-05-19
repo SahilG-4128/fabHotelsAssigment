@@ -36,7 +36,7 @@ public class EndorsementController {
                 endorsementResponseDTO.setScore(request.getScore());
                 endorsementResponseDTO.setAdjustedScore(request.getScore());
                 endorsementResponseDTO.setReason("ReviewerId and RevieweeId are same");
-                log.info("reviewer and reviewee id are same");
+                log.warn("reviewer and reviewee id are same");
                 return endorsementResponseDTO;
             }
             return endrosementService.postEndorsement(request);
