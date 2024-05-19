@@ -1,6 +1,5 @@
 package com.example.skillbasedendorsementapplication.models;
 
-import jakarta.persistence.Entity;
 import lombok.Data;
 import org.springframework.data.neo4j.core.schema.GeneratedValue;
 import org.springframework.data.neo4j.core.schema.Id;
